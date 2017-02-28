@@ -46,6 +46,9 @@ extension AnimationPeriod {
 }
 
 var animate = AnimationPeriod.third
+if animate == .third {
+    print("动画在第三阶段")
+}
 animate.rawValue
 animate.next()
 animate.rawValue
@@ -61,7 +64,7 @@ enum LOL {
     case Marksman, Mage, Assassin, Tank, Fighter, Support
 }
 
-let myHero = LOL.Marksman
+let myHero: LOL = .Marksman
 
 /*:
  枚举：嵌套枚举 👍🏻
@@ -189,5 +192,23 @@ enum Desktop {
 let aTower = Desktop.Tower((20, "XcodeYang", .Traveling) as HumanInfo)
 
 
+//: switch对象：元祖
+var myIPhone6s = AppleDevice.iPhone(price: 6088)
+var myIPhone4s = AppleDevice.iPhone(price: 2000)
+
+func sameDevice(_ firstDevice: AppleDevice, secondDevice: AppleDevice) -> Bool {
+    switch (firstDevice, secondDevice) {
+    case (.iPhone(let a), .iPhone(let b)) where a == b:
+        return true
+    case (.iPod(let a), .iPod(let b)) where a == b:
+        return true
+    case (.iMac, .iMac):
+        return true
+    default:
+        return false
+    }
+}
+
+print(sameDevice(myIPhone6s, secondDevice: myIPhone4s))
 //: [上一页](@previous) |
 //: [下一页](@next)
