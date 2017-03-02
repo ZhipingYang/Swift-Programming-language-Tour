@@ -3,5 +3,6 @@
     <pages>
         <page name='Struct'/>
         <page name='Class'/>
+        <page name='Comparison'/>
     </pages>
 </playground>

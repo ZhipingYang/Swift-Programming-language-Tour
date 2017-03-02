@@ -1,5 +1,6 @@
 //: [Struct](Struct) |
 //: Class |
+//: [对比](Comparison) |
 
 import UIKit
 
@@ -7,11 +8,40 @@ import UIKit
  Class 类 🇨🇳 
  ==========
  
- > 枚举的强大犹如Stuct一般,这里做简单介绍（包括协议等和struct相同的知识点以后一起串讲）
+ > 类的实例只能通过引用来间接地访问, 它能有很多个持有者
+ > 使用类，我们可以通过继承来共享代码
+ 
  */
 
-//: ## 演示
-//: 这是一个动画的枚举示例 -> 手机投屏演示
+
+/*:
+ 实例 💃
+ ---------
+ 
+ ```
+ class SomeClass {
+ // code
+ }
+ ```
+ */
+
+class Goods {
+    let name: String
+    var price: UInt
+    
+    init(name: String, price: UInt) {
+        self.name = name
+        self.price = price
+    }
+}
+
+let phone = Goods(name: "iphone", price: 6005)
+phone.name
+phone.price += 100
+phone.price
+
 
 
 //: [上一页](@previous) |
+//: [下一页](@next)
+
