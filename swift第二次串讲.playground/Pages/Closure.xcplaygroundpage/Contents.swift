@@ -263,6 +263,7 @@ result
  */
 let arr = [1, 3, 2]
 let res = arr.map({$0*2})
+res
 let res2 = arr.reduce([]) {
     (a: [Int], element: Int) -> [Int] in
     var t = a

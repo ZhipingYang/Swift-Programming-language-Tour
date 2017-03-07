@@ -215,7 +215,7 @@ window?.onRotate = {
     print("We now also need to update the view: \(view)")
 }
 // ✅
-window?.onRotate = { [weak view, weak myWindow=window, x=5*5] in
+window?.onRotate = { [weak view, weak myWindow=window] in
     print("We now also need to update the view: \(view)")
     print("Because the window \(myWindow) changed")
 }

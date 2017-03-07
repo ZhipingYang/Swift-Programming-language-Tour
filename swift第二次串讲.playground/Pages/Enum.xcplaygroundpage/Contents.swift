@@ -110,6 +110,7 @@ if case Hero.Luna(type: .assassin(let difficulty)) = luna {
 }
 
 
+
 enum FamilyType {
     case father(age: Int)
     case mother(age: Int)
@@ -190,6 +191,7 @@ enum Desktop {
     case Rack(HumanInfo)
 }
 let aTower = Desktop.Tower((20, "XcodeYang", .Traveling) as HumanInfo)
+let Cube = Desktop.Cube((21, "XcodeYang", .PlayGame))
 
 
 //: switch对象：元祖
