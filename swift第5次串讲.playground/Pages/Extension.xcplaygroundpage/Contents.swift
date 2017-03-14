@@ -1,8 +1,10 @@
-//: [Previous](@previous)
+//: Extension |
+//: [Error](Error) |
+//: [Subscript](Subscript)
 
 /*:
- 拓展 Extensions
- ==============
+ 拓展 Extensions 🎓
+ =================
  扩展 就是为一个已有的类、结构体、枚举类型或者协议类型添加新功能。和OC的category类似
  - 拓展语法
  - 计算属性
@@ -14,7 +16,7 @@
 
 import UIKit
 
-//: 拓展语法： 举个🌰
+//: 拓展语法： 举个 🌰
 //: ---------------
 //: 常见的viewController, 可以添加新的功能 或 拆分代理协议
 
@@ -208,4 +210,4 @@ extension Int {
 746381295[0]
 746381295[5]
 
-//: [Next](@next)
+//: [下一页](@next)

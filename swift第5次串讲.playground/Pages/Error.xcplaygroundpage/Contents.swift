@@ -1,3 +1,8 @@
+//: [Extension](Extension) |
+//: Error |
+//: [Subscript](Subscript)
+
+
 /*:
  错误处理 ❌
  ==========
@@ -10,51 +15,225 @@
 import UIKit
 
 //: 表示并抛出错误
-enum ATMError: Error {
-    case invalid                                //暂定服务
-    case insufficientFunds(coinsNeeded: Int)    //余额不足
-    case outOfStock                             //机器余额不足
-}
-
-throw ATMError.insufficientFunds(coinsNeeded: 5)
-
-
-//: 处理错误
-
-struct Card {
-    var money = 0
-    mutating func topUp(_ num:Int) {
-        money = money+num
-    }
-}
-
-struct ATM {
+enum DatingMachineError: Error {
+    case invalidSelection                       //选择无效
+    case insufficientFunds(coinsNeeded: Int)    //金额不足
+    case outOfStock                             //缺货
     
-    var store = 10000
-    
-    mutating func getMoneyFrom( card:inout Card, money:Int) throws {
-        if self.store <= 0 {
-            throw ATMError.invalid
-        } else if money > store {
-            throw ATMError.outOfStock
-        } else if card.money < money {
-            throw ATMError.insufficientFunds(coinsNeeded: money-card.money)
-        } else {
-            store -= money
-            card.money -= money
-            print("取款成功")
+    var localizedDescription: String {
+        switch self {
+        case .invalidSelection:
+            return "选择无效"
+        case .insufficientFunds(let coinsNeeded):
+            return "请再投入\(coinsNeeded)元"
+        case .outOfStock:
+            return "缺货"
+        default:
+            return "未知错误"
         }
     }
 }
 
-var mycard = Card(money: 1000)
-var atm = ATM(store: 10000)
-
-try atm.getMoneyFrom(card: &mycard, money: 10000)
-
-
-//: 指定清理操作
+// throw DatingMachineError.insufficientFunds(coinsNeeded: 5)
 
 
 
+/*:
+ 错误抛出
+ ------
+ ```
+ func canThrowErrors() throws -> String
+ func cannotThrowErrors() -> String
+ ```
+ */
 
+struct Person {
+    var price: Int
+    var count: Int
+}
+
+class DatingMachine {
+    
+    var waitingList = [
+        "boyFriend" : Person(price: 10,   count: 7),
+        "grilFriend": Person(price: 10,   count: 3),
+        "goddess"   : Person(price: 100,  count: 0)
+    ]
+    
+    var moneyPaid = 0
+    
+    func selling(itemNamed name: String) throws {
+        
+        guard let item = waitingList[name] else {
+            throw DatingMachineError.invalidSelection
+        }
+        guard item.count > 0 else {
+            throw DatingMachineError.outOfStock
+        }
+        guard item.price <= moneyPaid else {
+            throw DatingMachineError.insufficientFunds(coinsNeeded: item.price - moneyPaid)
+        }
+        
+        moneyPaid -= item.price
+        
+        var newItem = item
+        newItem.count -= 1
+        waitingList[name] = newItem
+        
+        print("已派出 \(name)")
+    }
+}
+
+//: 嵌套错误抛出的函数
+//: ---------------
+//: 抛出的错误会一直被传递到外围的抛出错误函数
+
+let customerFavorite = [
+    "Alice" : "girlFriend",
+    "Bob"   : "cat",
+    "Daniel": "goddess"
+]
+func dateFavoritePerson(customer: String, datingMachine: DatingMachine) throws {
+    let snackName = customerFavorite[customer] ?? "grilFriend"
+    try datingMachine.selling(itemNamed: snackName)
+}
+
+// 初始化方法错误抛出
+struct PurchasedSnack {
+    let name: String
+    init(name: String, datingMachine: DatingMachine) throws {
+        try datingMachine.selling(itemNamed: name)
+        self.name = name
+    }
+}
+
+/*:
+ 错误处理
+ ------
+ 和其他语言中（包括 Objective-C ）的异常处理不同的是，Swift 中的错误处理并不涉及解除调用栈（函数调用栈解释参考[blog1](http://www.cnblogs.com/rain-lei/p/3622057.html)，[blog2](http://blog.csdn.net/wangxiaolong_china/article/details/6844371)），这是一个计算代价高昂的过程。就此而言，throw语句的性能特性是可以和return语句相媲美的
+ */
+
+// do catch
+var datingMachine = DatingMachine()
+datingMachine.moneyPaid = 8
+
+do {
+    try dateFavoritePerson(customer:"Bob", datingMachine: datingMachine)
+} catch  {
+    print(error.localizedDescription)
+}
+
+do {
+    try dateFavoritePerson(customer:"Daniel", datingMachine: datingMachine)
+} catch DatingMachineError.invalidSelection {
+    print("无此类型可供选择")
+} catch DatingMachineError.outOfStock {
+    print("已被约满，请换其他的")
+} catch DatingMachineError.insufficientFunds(let coinsNeeded) {
+    print("余额不足. 请继续投 \(coinsNeeded) 个一元硬币.")
+}
+
+// 将错误转换成可选值
+
+func someThrowingFunction() throws -> Int {
+    return 0
+}
+
+var x = try? someThrowingFunction()
+x
+
+//等同于
+
+let y: Int?
+do {
+    y = try someThrowingFunction()
+} catch {
+    y = nil
+}
+
+let fileItem = try FileManager.default.attributesOfItem(atPath: "")
+fileItem
+
+/*:
+ 指定清理操作 defer
+ ----------------
+ defer语句：将代码的执行延迟到当前的作用域退出之前
+ > 注意多个defer嵌套或串行并列的执行先后顺序（自下而上，由外到内）
+ 
+ 普通用法如下例子：
+ */
+
+
+prefix func ++(x: inout Int) -> Int {
+    x += 1
+    return x
+}
+var number = 100
+let number2 = ++number
+number
+number2
+
+postfix func ++(x: inout Int) -> Int {
+    defer {
+        x += 1
+    }
+    return x
+}
+var num = 100
+let num2 = num++
+num
+num2
+
+func deferCount(_ x: inout Int) -> Int {
+//    defer {
+//        x = x/2
+//        defer {
+//            x += 100
+//        }
+//    }
+    defer {
+        x = x/10
+    }
+    defer {
+        x += 100
+    }
+    x += 10
+    return x
+}
+var deferNumber = 100
+let deferNumber2 = deferCount(&deferNumber)
+deferNumber
+deferNumber2
+
+
+/*:
+ > **defer** 能让你能执行一些必要的清理工作，不管是以何种方式离开当前代码块的（抛出错误而离开，或是return、break语句）。
+ 例如，你可以用defer语句来确保文件描述符得以关闭，以及手动分配的内存得以释放。
+ ```
+ // 文件关闭
+func processFile(filename: String) throws {
+    if exists(filename) {
+        let file = open(filename)
+        defer {
+            close(file)
+        }
+        while let line = try file.readline() {
+            // 处理文件。
+        }
+        // close(file) 会在这里被调用，即作用域的最后。
+    }
+}
+
+// 约束使用
+let view = UIView()
+
+let childView = UIView()
+defer {
+    childView.mas_makeConstraints {
+        $0.edges.equalTo()(view)
+    }
+}
+view.addSubview(childView)
+ 
+ ```
+ */
