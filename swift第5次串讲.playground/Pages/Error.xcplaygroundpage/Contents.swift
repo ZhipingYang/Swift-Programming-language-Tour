@@ -19,6 +19,7 @@ enum DatingMachineError: Error {
     case invalidSelection                       //选择无效
     case insufficientFunds(coinsNeeded: Int)    //金额不足
     case outOfStock                             //缺货
+    case unknow                                 //未知
     
     var localizedDescription: String {
         switch self {
@@ -115,14 +116,20 @@ struct PurchasedSnack {
 
 // do catch
 var datingMachine = DatingMachine()
-datingMachine.moneyPaid = 8
+datingMachine.moneyPaid = 80
 
 do {
     try dateFavoritePerson(customer:"Bob", datingMachine: datingMachine)
 } catch  {
-    print(error.localizedDescription)
+    if let reason = (error as? DatingMachineError)?.localizedDescription {
+        print(reason)
+    } else {
+        print(DatingMachineError.unknow.localizedDescription)
+    }
 }
-
+//: > Swift 的错误抛出其实是无类型的：我们只能够将一个函数标记为 throws，但是我们并不能指定应该抛出哪个类型的错误。
+//:
+//: 这是一个有意的设计，在大多数时候，你只关心有没有错误抛出。如果我们需要指定所有错误的类型，事情可能很快就会失控：它将使函数类型的签名变得特别复杂，特别是当函数调用其他的可抛出函数，并且将它们的错误向上传递的时候，这个问题将尤为严重。另外，添加一个错误类型，可能对使用这个 API 的所有客户端来说都是一个破坏性的 API 改动。
 do {
     try dateFavoritePerson(customer:"Daniel", datingMachine: datingMachine)
 } catch DatingMachineError.invalidSelection {
@@ -131,6 +138,8 @@ do {
     print("已被约满，请换其他的")
 } catch DatingMachineError.insufficientFunds(let coinsNeeded) {
     print("余额不足. 请继续投 \(coinsNeeded) 个一元硬币.")
+} catch {
+    print("其他错误")
 }
 
 // 将错误转换成可选值
@@ -151,14 +160,63 @@ do {
     y = nil
 }
 
-let fileItem = try FileManager.default.attributesOfItem(atPath: "")
-fileItem
+//let fileItem = try FileManager.default.attributesOfItem(atPath: "")
+//fileItem
+
+
+/*:
+ rethrows
+ ---------
+ map函数：
+ 
+ public func map<T>(_ transform: (Key, Value) throws -> T) rethrows -> [T]
+ 
+ */
+
+extension Array {
+    /// 当且仅当所有元素满足条件时返回 `true`
+    func all(condition: (Iterator.Element) -> Bool) -> Bool {
+        for element in self {
+            guard condition(element) else { return false }
+        }
+        return true
+    }
+}
+extension Int {
+    // 是否是质数
+    var isPrime: Bool {
+//        return self > 1 && !(2..<self).contains { self % $0 == 0 }
+        return self > 1 && !(2..<Int(sqrt(Double(self)))).contains { self % $0 == 0 }
+    }
+}
+
+func checkPrimes(_ numbers: [Int]) -> Bool {
+    return numbers.all { $0.isPrime }
+}
+
+let numberArray = [2,3,5,7,11,47]
+let numberArray2 = [2,3,5,6,7,11]
+checkPrimes(numberArray)
+checkPrimes(numberArray2)
+
+//:> 将 all 标记为 rethrows。这样一来，我们就可以一次性地对应两个版本(一个需要错误抛出，一个不需要)。rethrows 告诉编译器，这个函数只会在它的参数函数抛出错误的时候抛出错误。对那些向函数中传递的是不会抛出错误的 check 函数的调用，编译器可以免除我们一定要使用 try 来进行调用的要求：
+// 添加 rethrows
+extension Sequence {
+    func all(condition: (Iterator.Element) throws -> Bool) rethrows
+        -> Bool {
+            for element in self {
+                guard try condition(element) else { return false }
+            }
+            return true
+    }
+}
 
 /*:
  指定清理操作 defer
  ----------------
- defer语句：将代码的执行延迟到当前的作用域退出之前
- > 注意多个defer嵌套或串行并列的执行先后顺序（自下而上，由外到内）
+ defer语句：将代码的执行延迟到当前的作用域退出之前 
+ (同理，guard也需要掌握)
+ > 注意多个defer嵌套或串行并列的执行先后顺序（自下而上，由表及里）
  
  普通用法如下例子：
  */
