@@ -535,26 +535,16 @@ desi.haveFun()
 
 //: 集合的运用
 
-extension Programmer: TextRepresentable {
-    var textualDescription: String {
-        return "喜欢\(name)的码农"
-    }
-}
-extension Designer: TextRepresentable {
-    var textualDescription: String {
-        return "喜欢\(name)的设计师"
-    }
-}
-
-extension Array where Element: TextRepresentable {
-    var textualDescription: String {
-        let itemsAsText = self.map { $0.textualDescription }
-        return itemsAsText.reduce("结构: "){ $0 + "\n" + $1 }
+extension Collection where Iterator.Element: Entertainment {
+    var allNames:String {
+        return self.reduce("结果：", {
+            $0 + "\n" + $1.name
+        })
     }
 }
 
 let representableArray = [Designer(),Designer(),Designer()]
 // 留下待解决问题
-//let representableArray = [Programmer(),Designer()] as [TextRepresentable]
-print(representableArray.textualDescription)
+//let representableArray = [Programmer(),Designer()] as [Entertainment]
+print(representableArray.allNames)
 
