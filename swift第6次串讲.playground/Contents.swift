@@ -332,27 +332,229 @@ print(unnamed.prettyTextualDescription)
 /*:
  类类型专属协议
  */
-//protocol HumanSpecialProtocol: Dice, TextRepresentable {
+protocol Area: class {
+    var area:Double {get}
+}
+
+//struct CGPoint: Area {
 //    
 //}
-
 
 /*:
  协议合成
  */
+protocol Student {
+    var subject: String {get}
+}
+protocol Father {
+    var project: String { set get }
+}
+
+struct Family: Student, Father {
+    var project: String
+    var subject: String
+}
+
+func hopeSonPassTheTest(obj: Student & Father) {
+    print("老爸的<\(obj.project)>项目很忙，没法辅导儿子<\(obj.subject)>科目的考试")
+}
+
+let family = Family(project: "查违章", subject: "英语")
+hopeSonPassTheTest(obj: family)
 
 
 /*:
  检查协议一致性
+ ------------
+ 可以使用类型转换中描述的 is 和 as 操作符来检查协议一致性，即是否符合某协议
  */
+protocol Color {
+    var color:UIColor {get}
+}
+
+class BlackBoard: Color {
+    let color =  UIColor.black
+}
+
+class Glass {
+    var color: UIColor {
+        return UIColor.clear
+    }
+}
+
+class Apple: Color {
+    var color: UIColor
+    init(_ color: UIColor) {
+        self.color = color
+    }
+}
+
+let arr = [BlackBoard(), Glass(), Apple(.red)] as [AnyObject]
+arr.forEach {
+    let classNmae = String(describing: $0)
+    if $0 is Color {
+        print("\(classNmae) is follow Color")
+    } else {
+        print("\(classNmae) isn't follow Color")
+    }
+    
+//    if let _ = $0 as? Color {
+//        print("\(classNmae) as Color")
+//    } else {
+//        print("\(classNmae) cann't as Color")
+//    }
+}
+
+//extension Glass: Color {}
+//
+//let glass = Glass()
+//
+//if let _ = glass as? Color, glass is Color {
+//    print("😘 Glass is kind of clear Color")
+//}
+
+/*:
+ 可选的协议要求 (optional)
+ */
+
+
+@objc protocol Yell {
+    // 分贝
+    @objc optional var db: Int {get}
+    // 叫
+    @objc optional func yell() -> String
+}
+
+class Daniel: NSObject, Yell {
+    var age = 12
+    var db = 20
+    func yell() -> String {
+        return "hahaha..."
+    }
+}
+
+class Cat: NSObject, Yell {
+    func yell() -> String {
+        return "喵。。。"
+    }
+}
+
+class Animal {
+    var delegate: Yell?
+}
+
+let animal = Animal()
+let human = Daniel()
+animal.delegate = human
+animal.delegate?.yell?()
+animal.delegate?.db
+
+let cat = Cat()
+animal.delegate = cat
+animal.delegate?.yell?()
+animal.delegate?.db
 
 
 /*:
- 可选的协议要求
+ 协议扩展 (注意：协议的默认实现) 👍🏻
+ -----------------------------
+ 协议可以通过扩展来为遵循协议的类型提供属性、方法以及下标的实现。通过这种方式，你可以基于协议本身来实现这些功能，而无需在每个遵循协议的类型中都重复同样的实现，也无需使用全局函数
  */
 
+protocol PlayGame {
+    var gameName: String {get}
+    func startGame()
+    func endGame()
+}
 
-/*:
- 协议扩展
- */
+extension PlayGame {
+    func startGame() {
+        print("\(self.gameName) 游戏开始了")
+    }
+    func endGame() {
+        print(self.gameName + " 结束了")
+    }
+}
+
+extension Daniel: PlayGame {
+    var gameName: String {
+        return "王者荣耀"
+    }
+}
+
+human.gameName
+human.startGame()
+human.endGame()
+
+//: 为协议扩展添加限制条件
+
+protocol Entertainment {
+    var name: String {get}
+    func haveFun()
+}
+
+extension Entertainment where Self: Programmer {
+    var name: String {
+        return "video game"
+    }
+    func haveFun() {
+        print("开始玩\(name)啦。。")
+    }
+}
+
+extension Entertainment where Self: Producter {
+    // 拓展里只能是计算属性
+    var name: String {
+        return "card game"
+    }
+    func haveFun() {
+        print("来一起玩\(name)，怎么样")
+    }
+}
+
+
+class Programmer: Entertainment {}
+
+class Producter: Entertainment {}
+
+class Designer: Entertainment {
+    func haveFun() {
+        print("只能自己看\(name)")
+    }
+    var name: String = "动画片"
+}
+
+
+let prog = Programmer()
+prog.haveFun()
+let prod = Producter()
+prod.haveFun()
+let desi = Designer()
+desi.haveFun()
+
+
+//: 集合的运用
+
+extension Programmer: TextRepresentable {
+    var textualDescription: String {
+        return "喜欢\(name)的码农"
+    }
+}
+extension Designer: TextRepresentable {
+    var textualDescription: String {
+        return "喜欢\(name)的设计师"
+    }
+}
+
+extension Array where Element: TextRepresentable {
+    var textualDescription: String {
+        let itemsAsText = self.map { $0.textualDescription }
+        return itemsAsText.reduce("结构: "){ $0 + "\n" + $1 }
+    }
+}
+
+let representableArray = [Designer(),Designer(),Designer()]
+// 留下待解决问题
+//let representableArray = [Programmer(),Designer()] as [TextRepresentable]
+print(representableArray.textualDescription)
 
