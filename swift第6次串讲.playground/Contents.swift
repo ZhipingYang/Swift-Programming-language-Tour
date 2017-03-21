@@ -2,28 +2,30 @@
 /*:
  Swift 协议 👩🏻‍🎓
  ============
- 协议语法
- 属性要求
- 方法要求
- Mutating 方法要求
- 构造器要求
- 协议作为类型
- 委托（代理）模式
- 通过扩展添加协议一致性
- 通过扩展遵循协议
- 协议类型的集合
- 协议的继承
- 类类型专属协议
- 协议合成
- 检查协议一致性
- 可选的协议要求
- 协议扩展
+ 类、结构体或枚举都可以遵循协议
+ 
+ - 协议语法
+ - 属性要求
+ - 方法要求
+ - Mutating 方法要求
+ - 构造器要求
+ - 协议作为类型
+ - 委托（代理）模式
+ - 通过扩展添加协议一致性
+ - 通过扩展遵循协议
+ - 协议类型的集合
+ - 协议的继承
+ - 类类型专属协议
+ - 协议合成
+ - 检查协议一致性
+ - 可选的协议要求
+ - 协议扩展
  */
-
 import UIKit
 
 /*:
  协议语法
+ ------
  */
 
 protocol SomeProtocol {
@@ -44,29 +46,35 @@ class ChildClass: SomeClass, SomeProtocol {
 
 /*:
  属性要求
+ ------
  在类型声明后加上 { set get } 来表示属性是可读可写的，可读属性则用 { get }
+ { set get } 不适合在Extension和enum中执行，只能使用{ get }
  */
 
 protocol SomeProtocol1 {
     var mustBeSettable: Int { get set }
     var doesNotNeedToBeSettable: Int { get }
-    static var someTypeProperty: String { get set }
+    static var someTypeProperty: String { set get }
 }
 
-struct Person: SomeProtocol {
+struct SomeStruct1: SomeProtocol1 {
+    static var someTypeProperty: String = "someTypeProperty"
     var mustBeSettable: Int
     var doesNotNeedToBeSettable: Int
 }
 
-let bob = Person(mustBeSettable: 2, doesNotNeedToBeSettable: 3)
+SomeStruct1.someTypeProperty = "123"
+SomeStruct1.someTypeProperty
+
+let someStruct = SomeStruct1(mustBeSettable: 2, doesNotNeedToBeSettable: 3)
+someStruct.mustBeSettable
+someStruct.doesNotNeedToBeSettable
+
 
 /*:
  方法要求
+ ------
  */
-
-protocol SomeProtocol2 {
-    static func someTypeMethod()
-}
 
 // 协议并不关心每一个随机数是怎样生成的，它只要求必须提供一个随机数生成器
 protocol RandomNumberProtocol {
@@ -88,9 +96,7 @@ let randomColor = CLColor().randomColor
 
 
 /*:
- Mutating 方法要求
- ----------------
- 有时需要在方法中改变方法所属的实例(如结构体、枚举等值类型)
+ Mutating 方法：有时需要在方法中改变方法所属的实例(如结构体、枚举等值类型)
  */
 protocol Togglable {
     mutating func toggle()
@@ -158,6 +164,7 @@ class SomeSubClass: SomeSuperClass, SomeProtocol {
 
 /*:
  协议作为类型
+ ------
  场景：
  - 作为参数、返回值使用
  - 作为property
@@ -186,6 +193,7 @@ var v6 = Dice.init(sides: 6, generator: CLColor())
 
 /*:
  委托（代理）模式
+ ------
  委托是一种设计模式，它允许类或结构体将一些需要它们负责的功能委托给其他类型的实例。
  */
 
@@ -246,6 +254,7 @@ game.play()
 
 /*:
  通过扩展添加协议一致性
+ ------
  */
 
 protocol TextRepresentable {
@@ -270,6 +279,7 @@ print(game.textualDescription)
 
 /*:
  通过扩展遵循协议
+ ------
  */
 
 struct Human {
@@ -307,7 +317,7 @@ let textProtocalArr: [TextRepresentable] = [game, game.dice, Human(name: "john")
  swift 的协议继承
  ```
  protocol InheritingProtocol: SomeProtocol, AnotherProtocol {
-    // ...
+ // ...
  }
  
  ```
@@ -331,17 +341,19 @@ print(unnamed.prettyTextualDescription)
 
 /*:
  类类型专属协议
+ ------
  */
 protocol Area: class {
     var area:Double {get}
 }
 
 //struct CGPoint: Area {
-//    
+//
 //}
 
 /*:
  协议合成
+ ------
  */
 protocol Student {
     var subject: String {get}
@@ -398,11 +410,11 @@ arr.forEach {
         print("\(classNmae) isn't follow Color")
     }
     
-//    if let _ = $0 as? Color {
-//        print("\(classNmae) as Color")
-//    } else {
-//        print("\(classNmae) cann't as Color")
-//    }
+    //    if let _ = $0 as? Color {
+    //        print("\(classNmae) as Color")
+    //    } else {
+    //        print("\(classNmae) cann't as Color")
+    //    }
 }
 
 //extension Glass: Color {}
@@ -415,6 +427,7 @@ arr.forEach {
 
 /*:
  可选的协议要求 (optional)
+ -----------
  */
 
 
@@ -547,4 +560,3 @@ let representableArray = [Designer(),Designer(),Designer()]
 // 留下待解决问题
 //let representableArray = [Programmer(),Designer()] as [Entertainment]
 print(representableArray.allNames)
-
