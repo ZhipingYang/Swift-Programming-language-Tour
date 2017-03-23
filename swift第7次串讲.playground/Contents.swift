@@ -13,7 +13,7 @@
  - 关联类型
  - 泛型 Where 语句
  */
-
+import UIKit
 /*:
  繁琐的OC逻辑处理，一一创建对应不同类型的方法
  */
@@ -175,7 +175,6 @@ let childObj = SomeChildClass()
 childObj.name = "SomeChildClass"
 someFunction(someT: childObj, someU: someProto)
 
-
 //实例练习
 func findIndex(array: [String], _ valueToFind: String) -> Int? {
     for (index, value) in array.enumerated() {
@@ -188,7 +187,7 @@ func findIndex(array: [String], _ valueToFind: String) -> Int? {
 var animals = ["cat", "dog", "mouse", "fish"]
 let foundIndex = findIndex(array: animals, "mouse")
 
-// 类型重载
+// 泛型
 func findIndex<T: Equatable>(array: [T], _ valueToFind: T) -> Int? {
     for (index, value) in array.enumerated() {
         if value == valueToFind {
@@ -200,6 +199,66 @@ func findIndex<T: Equatable>(array: [T], _ valueToFind: T) -> Int? {
 
 let nums = [2, 4, 7, 1, 3, 4]
 let foundIndex2 = findIndex(array: nums, 4)
+
+/*:
+ 重载 🙄 （坑）
+ -----------
+ 拥有同样名字，但是参数或返回类型不同的多个方法互相称为重载方法，方法的重载并不意味着泛型。不过和泛型类似，我们可以将多种类型使用在同一个接口上。
+ > 重载的使用是在编译期间静态决定的。也就是说，编译器会依据变量的静态类型来决定要调用哪一个重载，而不是在运行时根据值的动态类型来决定
+ */
+
+func log<View: UIView>(_ view: View) {
+    print("It's a \(type(of: view)), frame: \(view.frame)")
+}
+func log(_ view: UILabel) {
+    let text = view.text ?? "(empty)"
+    print("It's a label, text: \(text)")
+}
+
+let label = UILabel(frame: CGRect(x: 20, y: 20, width: 200, height: 32))
+label.text = "Password"
+log(label)
+let button = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 50))
+log(button)
+
+[label, button].forEach{ log($0) }
+
+//: 这是因为 array 的静态类型是 [UIView]，UILabel 本来应该使用更专门的另一个重载，但是因为重载并不会考虑运行时的动态类型，所以两者都使用了 UIView 的泛型重载。
+
+// 运算符重载
+let num = powf(2, 10)
+
+// 幂运算比乘法运算优先级更高
+precedencegroup ExponentiationPrecedence {
+    associativity: left
+    higherThan: MultiplicationPrecedence
+}
+infix operator **: ExponentiationPrecedence
+func **(lhs: Double, rhs: Double) -> Double {
+    return pow(lhs, rhs)
+}
+func **(lhs: Float, rhs: Float) -> Float {
+    return powf(lhs, rhs)
+}
+
+// 只要有一个指定了类型
+let num2 = 2 ** Float(10)
+let num3 = 2.0 ** 10
+let num4:Float = 2 ** 10
+
+func **<I: SignedInteger>(lhs: I, rhs: I) -> I {
+    // 转换为 IntMax，使用 Double 的重载计算结果，
+    // 然后用 numericCast 转回原类型
+    let result = Double(lhs.toIntMax()) ** Double(rhs.toIntMax())
+    return numericCast(IntMax(result))
+}
+
+//:> 当使用操作符重载时，编译器会表现出一些[奇怪的行为](http://www.cocoawithlove.com/blog/2016/07/12/type-checker-issues.html)。即使泛型版本应该是更好的选择 (而且应该在一个普通函数调用时被选择) 的时候，类型检查器也还是会去选择那些非泛型的重载，而不去选择泛型重载。
+// Ambiguous use of operator '**'
+//let num5 = 2 ** 10
+let num6:Int = 2 ** 10
+
+//:> 编译器忽略了整数的泛型重载，因此它无法确定是去调用 Double 的重载还是 Float 的重载，因为两者对于整数字面量输入来说，是相同优先级的可选项 (Swift 编译器会将整数字面量在需要时自动向上转换为 Double 或者 Float)，所以编译器报错说存在歧义
 
 /*:
  关联类型
@@ -280,7 +339,6 @@ var anyS = AnyStack(items: [SomeClass()])
 anyS.count
 anyS[0].name
 anyS.pop()
-
 
 /*:
  泛型 Where 语句 😏
