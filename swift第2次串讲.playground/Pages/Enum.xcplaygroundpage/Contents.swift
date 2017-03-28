@@ -24,7 +24,7 @@ enum AnimationPeriod: Int {
         case .third, .end:      return "正在根据匹配结果\n生成选校方案"
         }
     }
-    // 结构体，枚举等不可添加存储类型的变量
+    // 枚举等不可添加存储类型的变量
     var duration: TimeInterval {
         switch self {
         case .start:    return 0.8

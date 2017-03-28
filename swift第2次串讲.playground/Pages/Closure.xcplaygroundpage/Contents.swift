@@ -30,7 +30,7 @@ import UIKit
  
  ```
  */
-
+// 存储属性赋值
 let str = "XcodeYang"
 
 let str1 = {
@@ -38,23 +38,25 @@ let str1 = {
 }()
 
 let str21 = { _ in
-    return "XcodeYang21"
+    return str+"21"
 }()
 
 let str22 = { obj in
-    return obj
-}("XcodeYang22")
+    return str+obj
+}("22")
 
-let str23 = {$0}("XcodeYang23")
+let str23 = {str+$0}("23")
+str23
 
-// 懒加载
+// 计算属性赋值
+// get only
 var str3: String {
     return str + "3"
 }
 
 var str4: String {
     get {
-        return "XcodeYang4"
+        return str + "4"
     }
 }
 
@@ -73,6 +75,7 @@ var str5: String {
 
 let str6 = str5 + "4"
 str5 = "new value str5"
+str5
 
 var str7: String = "XcodeYang7" {
     willSet{
@@ -88,7 +91,7 @@ str7 = "new value"
 var str8 = {
     arg1,arg2 -> String in
     return arg1+arg2;
-}("Xcode","Yang")
+}("XcodeYang","8")
 
 var str81 = {$0+$1}("Xcode","Yang")
 str81

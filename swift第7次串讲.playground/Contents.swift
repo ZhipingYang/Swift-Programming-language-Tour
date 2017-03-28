@@ -381,3 +381,65 @@ isAllItemsEqual(aa)
 isTwoContainerAllItemsEqual(abS, abArr)
 isTwoContainerAllItemsEqual(abS, aa)
 
+
+
+// 拓展：回顾 where 关键字的使用场景
+
+// 递进条件判断
+
+let where_arr = [1,2,3,4,5]
+
+for i in where_arr where i%2==0 {
+    print("where_arr"+"\(i)")
+}
+
+enum FamilyMember {
+    case father(age: Int)
+    case mother(realAge: Int, looksLikeAge:Int)
+    case sister(age: Int)
+    
+    var gift: String {
+        switch(self) {
+        case .sister(let age):
+            if age > 18 {
+                return "iphone"
+            } else {
+                return "toy"
+            }
+        case .mother(let realAge, let looksLikeAge) where realAge > looksLikeAge && realAge < 40:
+            return "cloth"
+        default:
+            return "book"
+        }
+    }
+}
+
+let sister = FamilyMember.sister(age: 23)
+
+if case .sister(let age) = sister, age > 20 {
+    print("sisiter age: \(age) > 20, gift:"+sister.gift)
+}
+
+// 协议、类型约束
+
+protocol WhereProtocol {}
+class WhereClass {}
+
+extension WhereProtocol where Self: WhereClass {
+    //code
+}
+
+extension Array where Iterator.Element: WhereClass/*, Iterator.Element: Hashable*/ {
+    func hello() {print("hello")}
+}
+
+let helloArr = [WhereClass()]
+helloArr.hello()
+//where_arr.hello()
+
+// 泛型 约束 对象遵从协议
+func someFunction<T: SomeClass>(someT: T) where T:SomeProtocol {
+    print("name:\(someT.name) \nhello 1:\(someT.hello)")
+}
+
+
