@@ -8,3 +8,4 @@
 ### [作业列表](https://github.com/CheLun-iOS/Swift-Programming-language-Tour/issues)
 
 - [第一次作业](https://github.com/CheLun-iOS/Swift-Programming-language-Tour/issues/1)
+- [第二次作业](https://github.com/CheLun-iOS/Swift-Programming-language-Tour/issues/2)
