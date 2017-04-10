@@ -34,6 +34,7 @@
                     <constraint firstItem="eMD-ux-xww" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="hwe-zV-3Ju"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
             <connections>
                 <outlet property="imageMessageView" destination="eMD-ux-xww" id="ftE-vq-vAj"/>
                 <outlet property="leading" destination="fd9-n1-GOL" id="dAJ-Ba-Evi"/>

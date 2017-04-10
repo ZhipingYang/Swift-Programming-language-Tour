@@ -12,27 +12,15 @@ class ViewController: UIViewController {
     
     lazy var tableView: UITableView = {
         let tableView = UITableView.init(frame: .zero, style: .plain)
+        tableView.estimatedRowHeight = 60
+        tableView.register(UINib.init(nibName: String(describing: TextCell.self), bundle: nil), forCellReuseIdentifier: String(describing: TextCell.self))
+        tableView.register(UINib.init(nibName: String(describing: ImageCell.self), bundle: nil), forCellReuseIdentifier: String(describing: ImageCell.self))
         tableView.separatorStyle = .none
         return tableView
     }()
     
     lazy var bottomView: BottomView = {
-        let bottom = BottomView(frame: .zero)
-        return bottom
-    }()
-    
-    var dataArray = [ChatModelProtocol]()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.estimatedRowHeight = 60
-        tableView.register(UINib.init(nibName: String(describing: TextCell.self), bundle: nil), forCellReuseIdentifier: String(describing: TextCell.self))
-        tableView.register(UINib.init(nibName: String(describing: ImageCell.self), bundle: nil), forCellReuseIdentifier: String(describing: ImageCell.self))
-        view.addSubview(tableView)
-        
+        let bottomView = BottomView(frame: .zero)
         bottomView.sendTextBlock = {[unowned self] str in
             let model = ChatModel.textMessage(data: (position: Position.right, text: str))
             self.dataArray.append(model)
@@ -45,13 +33,22 @@ class ViewController: UIViewController {
             self.tableView.reloadData()
             self.tableView.scrollToBottom()
         }
-        view.addSubview(bottomView)
+        return bottomView
+    }()
+    
+    var dataArray = [ChatModelProtocol]()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
+        tableView.delegate = self
+        tableView.dataSource = self
+        view.addSubview(tableView)
+        view.addSubview(bottomView)
         
         (0..<20).forEach { _ in
            dataArray.append(ChatModel.random())
         }
-        
         addNotification()
     }
     
@@ -73,12 +70,10 @@ extension ViewController: UITableViewDataSource {
         
         if case ChatModel.imageMessage(data: _) = item {
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ImageCell.self)) as! ImageCell
-            cell.backgroundColor = UIColor.yellow
             cell.item = item
             return cell
         } else if case ChatModel.textMessage(data: (_, _)) = item {
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: TextCell.self)) as! TextCell
-            cell.backgroundColor = UIColor.purple
             cell.item = item
             return cell
         }

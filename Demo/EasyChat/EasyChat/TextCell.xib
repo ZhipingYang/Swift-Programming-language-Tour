@@ -34,6 +34,7 @@
                     <constraint firstAttribute="trailingMargin" secondItem="bex-cC-dyd" secondAttribute="trailing" id="vu2-Jv-BZN"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" red="0.5" green="0.0" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
             <connections>
                 <outlet property="leading" destination="qXJ-cy-Xzk" id="pqw-rZ-l51"/>
                 <outlet property="textMessageLabel" destination="bex-cC-dyd" id="wOU-pO-Az0"/>
