@@ -1,4 +1,3 @@
-//: [Previous](@previous)
 
 import Foundation
 
@@ -36,6 +35,7 @@ var i2 = i1
 i1.next()
 i2.next()
 
+//: 迭代器和值语义
 
 var i3 = AnyIterator(i1)
 var i4 = i3
@@ -62,8 +62,32 @@ i2.next()
 i5.next()
 i6.next()
 
+//:> MyIterator & AnyIterator 不具有值语义,任何对 i3、i4 或者 i5、i6 进行的调用，都会增加底层那个相同的迭代器的取值。更多的时候是通过使用 for 循环隐式地进行创建的。你只用它来循环元素，然后就将其抛弃
 
+func fibsIterator() -> AnyIterator<String> {
+    let string: String = "Hello"
+    var offset = string.startIndex
+    return AnyIterator {
+        if offset >= string.endIndex { return nil }
+        offset = string.index(after: offset)
+        return string[string.startIndex..<offset]
+    }
+}
 
+let sequence = AnySequence(fibsIterator)
+let strArray = Array(sequence.prefix(4))
+strArray
 
+let sliptSequence = AnySequence(fibsIterator).split { (str) -> Bool in
+    return str.characters.count>3
+}
 
+// 子序列
+if let new = sliptSequence.first {
+    let sliptArray = Array(new)
+    sliptArray
+}
+
+//: [返回Sequence](Sequence) |
+//: [返回斐波那契序列](Fibs)
 

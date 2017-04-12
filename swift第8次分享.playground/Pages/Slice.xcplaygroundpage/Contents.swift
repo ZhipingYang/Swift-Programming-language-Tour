@@ -6,49 +6,12 @@ var str = "Hello, playground"
 
 //: [Next](@next)
 
+let arr = [11,22,33,44,55,66]
 
+let new = arr.split(separator: 55)
+new
 
-
-import UIKit
-
-protocol Entertainment {
-    var name: String {get}
-    func haveFun()
+let new2 = arr.split { (num) -> Bool in
+    return num<30
 }
-
-extension Entertainment where Self: Programmer {
-    var name: String {
-        return "video game"
-    }
-    func haveFun() {
-        print("开始玩\(name)啦。。")
-    }
-}
-
-extension Entertainment where Self: Producter {
-    // 拓展里只能是计算属性
-    var name: String {
-        return "card game"
-    }
-    func haveFun() {
-        print("来一起玩\(name)，怎么样")
-    }
-}
-
-
-class Programmer: Entertainment {}
-
-class Producter: Entertainment {}
-
-extension Array where Iterator.Element: Entertainment {
-    var allNames:String {
-        return self.reduce("结果：", {
-            $0 + "\n" + $1.name
-        })
-    }
-}
-
-let representableArray = [Programmer(),Programmer(),Programmer()]
-// 留下待解决问题
-//let representableArray = [Producter(),Programmer()] as [Entertainment]
-print(representableArray.allNames)
+new2
