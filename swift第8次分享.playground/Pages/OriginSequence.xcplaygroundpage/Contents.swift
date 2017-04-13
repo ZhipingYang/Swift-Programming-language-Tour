@@ -85,20 +85,3 @@ view.prettyPrintSubviews()
 view.recurrenceAllSubviews().forEach { print($0.tag) }
 
 
-
-
-// 序列的使用
-let viewSequence = sequence(state: [view]) { (state: inout [UIView] ) -> [UIView]? in
-    guard state.count > 0 else { return nil }
-    defer {
-        state = state.map{ $0.subviews }.flatMap{ $0 }
-    }
-    return state
-}
-
-let views = Array(viewSequence.prefix(8)).flatMap{ $0 }
-
-print(views.map{ $0.tag })
-
-
-
