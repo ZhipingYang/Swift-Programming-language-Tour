@@ -9,6 +9,6 @@
 
 - [x] ~~[第一次作业](https://github.com/CheLun-iOS/Swift-Programming-language-Tour/issues/1)~~
 - [x] ~~[第二次作业](https://github.com/CheLun-iOS/Swift-Programming-language-Tour/issues/2)~~
-- [ ] [第三次作业](https://github.com/CheLun-iOS/Swift-Programming-language-Tour/issues/3)
+- [x] ~~[第三次作业](https://github.com/CheLun-iOS/Swift-Programming-language-Tour/issues/3)~~
 
 - [ ] [第四次作业](https://github.com/CheLun-iOS/Swift-Programming-language-Tour/issues/3)
