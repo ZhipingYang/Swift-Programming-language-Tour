@@ -1,10 +1,9 @@
-//: ## [返回Sequence](Sequence)
+//: [返回Sequence](Sequence)
 
 import Foundation
 
 //: ## 斐波那契序列
 //: 0,1,1,2,3,5,8....
-
 //: > sequence 对于 next 闭包的使用是被延迟的。也就是说，序列的下一个值不会被预先计算，它只在调用者需要的时候生成
 
 struct FibsUnlimitedIterator: IteratorProtocol {

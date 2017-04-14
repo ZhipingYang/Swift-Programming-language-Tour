@@ -67,8 +67,9 @@ while let num = iterator2.next() {
         break
     }
 }
-//: 实践: [斐波那契序列](Fibs)
+//: 实践:
 //: ---------------
+//: [斐波那契序列](Fibs)
 struct FibsIterator: IteratorProtocol {
     var state = (0, 1)
     mutating func next() -> Int? {

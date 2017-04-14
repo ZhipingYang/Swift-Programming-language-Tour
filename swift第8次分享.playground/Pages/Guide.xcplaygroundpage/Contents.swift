@@ -3,7 +3,7 @@
 /*:
  ## 集合类型协议
  > 集合类型中的 Array，Dictionary 和 Set 是建立在一系列由 Swift 标准库提供的用来处理元素序列的抽象之上的，而 Sequence 和 Collection 协议，它们构成了这套集合类型模型的基石
- - 序列 Sequence
+ - [序列 Sequence](Sequence)
     - 迭代器
     - 遵守序列协议
     - 迭代器和值语义
