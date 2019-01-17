@@ -17,19 +17,19 @@ arr.count
 arr.isEmpty
 
 let text = "hello world"
-let num = text.characters.count
-if let firstSpace = text.characters.index(of: " ") {
-    print(text.characters.prefix(upTo: firstSpace))
+let num = text.count
+if let firstSpace = text.index(of: " ") {
+    print(text.prefix(upTo: firstSpace))
 }
-let firstCharacter = text.characters[text.characters.startIndex]
-let firstCharacter2 = text.characters.first
+let firstCharacter = text[text.startIndex]
+let firstCharacter2 = text.first
 
-for i in text.characters {
+for i in text {
     print(i)
 }
 
-for i in text.characters.indices {
-    print(text.characters[i])
+for i in text.indices {
+    print(text[i])
 }
 
 

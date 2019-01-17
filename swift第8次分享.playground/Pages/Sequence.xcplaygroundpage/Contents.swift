@@ -67,27 +67,9 @@ while let num = iterator2.next() {
         break
     }
 }
-//: 实践:
-//: ---------------
-//: [斐波那契序列](Fibs)
-struct FibsIterator: IteratorProtocol {
-    var state = (0, 1)
-    mutating func next() -> Int? {
-        let result = state.0
-        state = (state.1, state.0 + state.1)
-        return result
-    }
-}
-
-var iterator3Limit = 0
-var iterator3 = FibsIterator()
-while let num = iterator3.next() {
-    print("斐波那契序列:\(num)")
-    iterator3Limit+=1
-    if iterator3Limit>10 {
-        break
-    }
-}
+//: 实战Page:
+//: - [斐波那契序列(子序列)](Fibs)
+//: - [String（迭代器的值类型和引用类型 & split）](String)
 
 /*:
  序列的不稳定性

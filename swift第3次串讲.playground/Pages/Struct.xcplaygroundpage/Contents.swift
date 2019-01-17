@@ -215,7 +215,7 @@ struct ContainClassStruct {
     }
 }
 
-// 不解：指定Empty为NSObject子类，copy就成功了？？
+//: 不解：指定Empty为NSObject子类，copy就成功了？？
 var s = ContainClassStruct()
 s.change()
 
@@ -227,21 +227,17 @@ if original.refValue !== copy.refValue {
     print("引用类型的对象深拷贝成功")
 }
 
-// > 字典的下标将会在字典中寻找值，然后将它返回。因为我们是在值语义下处理，所以返回的是找到的值的复制
+//: > 字典的下标将会在字典中寻找值，然后将它返回。因为我们是在值语义下处理，所以返回的是找到的值的复制
 var dic = ["key":ContainClassStruct()]
 dic["key"]?.change()
-
-
 //: > Array 通过使用地址器 (addressors) 的方式实现下标。地址器允许对内存进行直接访问。数组的下标并不是返回元素，而是返回一个元素的地址器。这样一来，元素的内存可以被原地改变，而不需要再进行不必要的复制
 //: Array 的下标使用了特别的处理，来让写时复制生效。但是不幸的是，现在其他类型都没有使用这种技术。Swift 团队提到过它们希望提取该技术的范式，并将其应用在字典上
-
 var arr = [ContainClassStruct()]
 arr[0].change()
 
 var otherArr = [ContainClassStruct()]
 var xx = otherArr[0]
 xx.change()
-
 /*:
  
  > 默认情况下结构体是存储在堆上的，但是在绝大多数时候，这个优化会生效，并将结构体存储到栈上。当结构体变量被一个函数闭合的时候，优化将不再生效，此时这个结构体将存储在堆上。如果结构体太大，它也会被存储在堆上

@@ -13,7 +13,7 @@ struct PrefixIterator: IteratorProtocol {
     mutating func next() -> String? {
         if offset >= string.endIndex { return nil }
         offset = string.index(after: offset)
-        return string[string.startIndex..<offset]
+        return String(string[string.startIndex..<offset])
     }
 }
 
@@ -31,21 +31,20 @@ for prefix in PrefixSequence(string: "Hello") {
 var i1 = PrefixSequence(string: "Hello").makeIterator()
 i1.next()
 
+// 写时复制
 var i2 = i1
 i1.next()
 i2.next()
 
 //: 迭代器和值语义
-
-var i3 = AnyIterator(i1)
-var i4 = i3
+var i3 = AnyIterator(i1)    // i1被复制了
+var i4 = i3                 // i3 i4引用都一个迭代器
 i1.next()
 i3.next()
 i4.next()
 
 
-
-class MyIterator {
+class MyReferanceIterator {
     var base: PrefixIterator
     
     public init(_ base: PrefixIterator) {
@@ -56,13 +55,13 @@ class MyIterator {
     }
 }
 
-var i5 = MyIterator(i2)
+var i5 = MyReferanceIterator(i2)
 var i6 = i5
 i2.next()
 i5.next()
 i6.next()
 
-//:> MyIterator & AnyIterator 不具有值语义,任何对 i3、i4 或者 i5、i6 进行的调用，都会增加底层那个相同的迭代器的取值。更多的时候是通过使用 for 循环隐式地进行创建的。你只用它来循环元素，然后就将其抛弃
+//:> MyReferanceIterator & AnyIterator 不具有值语义,任何对 i3、i4 或者 i5、i6 进行的调用，都会增加底层那个相同的迭代器的取值。更多的时候是通过使用 for 循环隐式地进行创建的。你只用它来循环元素，然后就将其抛弃
 
 func fibsIterator() -> AnyIterator<String> {
     let string: String = "Hello"
@@ -70,17 +69,32 @@ func fibsIterator() -> AnyIterator<String> {
     return AnyIterator {
         if offset >= string.endIndex { return nil }
         offset = string.index(after: offset)
-        return string[string.startIndex..<offset]
+        return String(string[string.startIndex..<offset])
     }
 }
+
+//: AnySequence
 
 let sequence = AnySequence(fibsIterator)
 let strArray = Array(sequence.prefix(4))
 strArray
 
-let sliptSequence = AnySequence(fibsIterator).split { (str) -> Bool in
-    return str.characters.count>3
+let commaSeparatedArray = "a,b,c".split { $0 == "," }
+commaSeparatedArray.map(String.init)
+
+let SSequence = AnySequence(fibsIterator)
+let AArray = SSequence.map { $0 }
+AArray
+
+let sliptSequence = SSequence.split { (str) -> Bool in
+    return str.count>4
 }
+
+let split_flatMap = sliptSequence.flatMap{ $0 }
+split_flatMap
+
+let split = sliptSequence.map{ $0.map{$0} }
+split
 
 // 子序列
 if let new = sliptSequence.first {
@@ -88,6 +102,5 @@ if let new = sliptSequence.first {
     sliptArray
 }
 
-//: [返回Sequence](Sequence) |
-//: [返回斐波那契序列](Fibs)
+//: [返回Sequence](Sequence)
 

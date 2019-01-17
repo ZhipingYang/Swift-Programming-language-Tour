@@ -13,7 +13,7 @@
     - 序列和迭代器之间的关系
     - 子序列
     
- - 集合类型 Collection
+ - 集合类型 Collection (下一节讲)
     - 为队列设计协议
     - 队列的实现
     - 遵守 collection 协议

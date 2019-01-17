@@ -235,10 +235,10 @@ precedencegroup ExponentiationPrecedence {
 }
 infix operator **: ExponentiationPrecedence
 func **(lhs: Double, rhs: Double) -> Double {
-    return pow(lhs, rhs)
+    return pow(lhs, rhs)+0.1
 }
 func **(lhs: Float, rhs: Float) -> Float {
-    return powf(lhs, rhs)
+    return powf(lhs, rhs)+0.2
 }
 
 // 只要有一个指定了类型
@@ -246,17 +246,17 @@ let num2 = 2 ** Float(10)
 let num3 = 2.0 ** 10
 let num4:Float = 2 ** 10
 
-func **<I: SignedInteger>(lhs: I, rhs: I) -> I {
-    // 转换为 IntMax，使用 Double 的重载计算结果，
-    // 然后用 numericCast 转回原类型
-    let result = Double(lhs.toIntMax()) ** Double(rhs.toIntMax())
-    return numericCast(IntMax(result))
-}
+//func **<I: SignedInteger>(lhs: I, rhs: I) -> I {
+//    // 转换为 IntMax，使用 Double 的重载计算结果，
+//    // 然后用 numericCast 转回原类型
+//    let result = Double(UInt64(lhs)) ** Double(UInt64(rhs))
+//    return numericCast(BinaryInteger(result))
+//}
 
 //:> 当使用操作符重载时，编译器会表现出一些[奇怪的行为](http://www.cocoawithlove.com/blog/2016/07/12/type-checker-issues.html)。即使泛型版本应该是更好的选择 (而且应该在一个普通函数调用时被选择) 的时候，类型检查器也还是会去选择那些非泛型的重载，而不去选择泛型重载。
-// Ambiguous use of operator '**'
+//// Ambiguous use of operator '**'
 //let num5 = 2 ** 10
-let num6:Int = 2 ** 10
+//let num6:Int = 2 ** 10
 
 //:> 编译器忽略了整数的泛型重载，因此它无法确定是去调用 Double 的重载还是 Float 的重载，因为两者对于整数字面量输入来说，是相同优先级的可选项 (Swift 编译器会将整数字面量在需要时自动向上转换为 Double 或者 Float)，所以编译器报错说存在歧义
 
@@ -344,7 +344,7 @@ anyS.pop()
  泛型 Where 语句 😏
  ----------------
  */
-func isAllItemsEqual<T:Container> (_ someContainer: T) -> Bool where T.ItemType: Equatable {
+func isAllItemsEqual<T:Container>(_ someContainer: T) -> Bool where T.ItemType: Equatable {
     
     if someContainer.count > 1 {
         for i in 1..<someContainer.count {
@@ -356,9 +356,7 @@ func isAllItemsEqual<T:Container> (_ someContainer: T) -> Bool where T.ItemType:
     return true
 }
 
-func isTwoContainerAllItemsEqual<C1: Container, C2: Container>
-    (_ someContainer: C1, _ anotherContainer: C2) -> Bool
-    where C1.ItemType == C2.ItemType, C1.ItemType: Equatable /*, C2.ItemType: Equatable*/
+func isTwoContainerAllItemsEqual<C1: Container, C2: Container>(_ someContainer: C1, _ anotherContainer: C2) -> Bool where C1.ItemType == C2.ItemType, C1.ItemType: Equatable /*, C2.ItemType: Equatable*/
 {
     if someContainer.count != anotherContainer.count { return false }
     for i in 0..<someContainer.count {
@@ -387,7 +385,7 @@ isTwoContainerAllItemsEqual(abS, aa)
 
 // 递进条件判断
 
-let where_arr = [1,2,3,4,5]
+let where_arr = (0...8).map{$0} // Array(0...8)
 
 for i in where_arr where i%2==0 {
     print("where_arr"+"\(i)")

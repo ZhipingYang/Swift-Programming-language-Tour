@@ -51,7 +51,7 @@ let hum21 = Human2().name
 let hum22 = Human2.init(name: "哈哈哈").name
 
 class Chinese: Human2 {
-    var address:String?
+    var address:String
     
     init(name:String, address:String) {
         self.address = address

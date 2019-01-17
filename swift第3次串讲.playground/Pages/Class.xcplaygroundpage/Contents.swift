@@ -212,12 +212,12 @@ window?.rootView = view!
 
 // ❌
 window?.onRotate = {
-    print("We now also need to update the view: \(view)")
+    print("We now also need to update the view: \(String(describing: view))")
 }
 // ✅
 window?.onRotate = { [weak view, weak myWindow=window] in
-    print("We now also need to update the view: \(view)")
-    print("Because the window \(myWindow) changed")
+    print("We now also need to update the view: \(String(describing: view))")
+    print("Because the window \(String(describing: myWindow)) changed")
 }
 
 //: [上一页](@previous) |

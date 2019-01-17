@@ -94,7 +94,6 @@ class CLColor: RandomNumberProtocol {
 }
 let randomColor = CLColor().randomColor
 
-
 /*:
  Mutating 方法：有时需要在方法中改变方法所属的实例(如结构体、枚举等值类型)
  */
@@ -154,7 +153,6 @@ class SomeSuperClass {
 }
 
 class SomeSubClass: SomeSuperClass, SomeProtocol {
-    // 因为遵循协议，需要加上 required
     // 因为继承自父类，需要加上 override
     required override init() {
         // 逻辑
@@ -272,10 +270,6 @@ extension FeiXingQi: TextRepresentable {
         return "这是一个使用\(dice.sides)面骰子,优先走完\(finalStep)步的飞行棋游戏"
     }
 }
-print(game.dice.textualDescription)
-print(game.textualDescription)
-
-
 
 /*:
  通过扩展遵循协议
@@ -292,15 +286,13 @@ struct Human {
 extension Human: TextRepresentable {}
 
 let textProtocal: TextRepresentable = Human(name: "john")
-textProtocal.textualDescription
-
 /*:
  协议类型的集合
  */
-let textProtocalArr: [TextRepresentable] = [game, game.dice, Human(name: "john")]
-//textProtocalArr.forEach {
-//    print($0.textualDescription)
-//}
+let textProtocalArr: [TextRepresentable] = [game, game.dice, textProtocal]
+textProtocalArr.forEach {
+    print($0.textualDescription)
+}
 
 /*:
  协议的继承
@@ -410,11 +402,11 @@ arr.forEach {
         print("\(classNmae) isn't follow Color")
     }
     
-    //    if let _ = $0 as? Color {
-    //        print("\(classNmae) as Color")
-    //    } else {
-    //        print("\(classNmae) cann't as Color")
-    //    }
+    if let _ = $0 as? Color {
+        print("\(classNmae) as Color")
+    } else {
+        print("\(classNmae) cann't as Color")
+    }
 }
 
 //extension Glass: Color {}
@@ -548,7 +540,7 @@ desi.haveFun()
 
 //: 集合的运用
 
-extension Collection where Iterator.Element: Entertainment {
+extension Collection where Iterator.Element == Entertainment {
     var allNames:String {
         return self.reduce("结果：", {
             $0 + "\n" + $1.name
@@ -556,7 +548,5 @@ extension Collection where Iterator.Element: Entertainment {
     }
 }
 
-let representableArray = [Designer(),Designer(),Designer()]
-// 留下待解决问题
-//let representableArray = [Programmer(),Designer()] as [Entertainment]
+let representableArray = [Programmer(),Producter(),Designer()] as [Entertainment]
 print(representableArray.allNames)

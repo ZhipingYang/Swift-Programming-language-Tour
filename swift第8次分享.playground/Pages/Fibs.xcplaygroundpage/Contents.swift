@@ -24,7 +24,7 @@ struct FibUnlimitedSequence: Sequence {
 // 子序列
 // 这个序列是无限的, prefix条件限制获取完毕，然后便停止了;
 let unlimitedArr = Array(FibUnlimitedSequence().prefix(10))
-let unlimitedArr2 = Array(FibUnlimitedSequence().prefix(while: { $0<20 }))
+let unlimitedArr2 = Array(FibUnlimitedSequence().prefix(while: { $0<1000 }))
 unlimitedArr
 unlimitedArr2
 
@@ -72,6 +72,10 @@ for (index, num) in FibSequence(count: 5).enumerated() {
 // 高阶函数
 let array = FibSequence(count: 5).map{ $0 }
 array
+
+let filterA = FibSequence(count: 10).filter { $0%2==0 }
+filterA
+
 let sum = FibSequence(count: 5).reduce(0) { $0+$1 }
 sum
 

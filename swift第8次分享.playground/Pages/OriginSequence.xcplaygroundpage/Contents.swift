@@ -1,4 +1,4 @@
-//: [Previous](@previous)
+//: [返回 Sequence](Sequence)
 
 import UIKit
 
@@ -17,13 +17,11 @@ import UIKit
 
 let randomNumbers = sequence(first: 100) { (previous: UInt32) in
     let newValue = arc4random_uniform(previous)
-    guard newValue > 0 else {
-        return nil
-    }
+    guard newValue > 0 else { return nil }
     return newValue
 }
 
-//print(Array(randomNumbers))
+let randomArr = Array(randomNumbers)
 
 
 
@@ -33,7 +31,7 @@ let fibsSequence2 = sequence(state: (0, 1)) { (state: inout (Int, Int)) -> Int? 
     return upcomingNumber
 }
 
-//print(Array(fibsSequence2.prefix(10)))
+let fibsArr = Array(fibsSequence2.prefix(10))
 
 
 
@@ -82,6 +80,18 @@ let view = UIView()
 view.tag = 1
 view.randomAddSubview()
 view.prettyPrintSubviews()
-view.recurrenceAllSubviews().forEach { print($0.tag) }
+view.recurrenceAllSubviews().count
 
+//: 方法2
+let viewSequence = sequence(state: [view]) { (state: inout [UIView] ) -> [UIView]? in
+    guard state.count > 0 else { return nil }
+    defer {
+        state = state.map{ $0.subviews }.flatMap{ $0 }
+    }
+    return state
+}
+
+let views = viewSequence.flatMap{ $0 }
+views
+views.count
 
