@@ -1,7 +1,6 @@
 //: Extension |
 //: [Error](Error) |
 //: [Subscript](Subscript)
-
 /*:
  拓展 Extensions 🎓
  =================
@@ -13,13 +12,10 @@
  - 下标
  - 嵌套类型
  */
-
 import UIKit
-
 //: 拓展语法： 举个 🌰
 //: ---------------
 //: 常见的viewController, 可以添加新的功能 或 拆分代理协议
-
 class Human: NSObject {
     
     var name = "my_vc"

@@ -3,7 +3,6 @@
 //: [对比](Comparison) 
 
 import UIKit
-
 /*:
  Class 类 🇨🇳 
  ==========
@@ -15,8 +14,6 @@ import UIKit
  3.NSString,NSArray和NSDictionary类型均以类的形式实现，而并非结构体
  
  */
-
-
 /*:
  实例 💃
  ---------
@@ -27,7 +24,6 @@ import UIKit
  }
  ```
  */
-
 class Goods {
     let name: String
     var price: UInt

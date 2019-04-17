@@ -1,7 +1,6 @@
 //: [Extension](Extension) |
 //: [Error](Error) |
 //: Subscript
-
 /*:
  下标 index 📍
  ============
@@ -11,10 +10,7 @@
  - 下标用法
  - 小标选项
  */
-
 import Foundation
-
-
 /*:
  下标语法
  ```
@@ -28,7 +24,6 @@ subscript(index: Int) -> Int {
 }
  ```
  */
-
 struct TimesTable {
     let multiplier: Int
     subscript(index: Int) -> Int {
@@ -37,7 +32,6 @@ struct TimesTable {
 }
 let threeTimesTable = TimesTable(multiplier: 3)
 threeTimesTable[6]
-
 
 /*:
  下标用法

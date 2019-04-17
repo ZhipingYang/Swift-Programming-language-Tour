@@ -11,14 +11,14 @@ import UIKit
 let arr = [1,2,3,4,5]
 arr.first
 arr.count
-arr.index(of: 3)
+arr.firstIndex(of: 3)
 arr.prefix(upTo: 4)
 arr.count
 arr.isEmpty
 
 let text = "hello world"
 let num = text.count
-if let firstSpace = text.index(of: " ") {
+if let firstSpace = text.firstIndex(of: " ") {
     print(text.prefix(upTo: firstSpace))
 }
 let firstCharacter = text[text.startIndex]

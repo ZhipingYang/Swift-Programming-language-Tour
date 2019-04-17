@@ -1,8 +1,6 @@
 //: [Extension](Extension) |
 //: Error |
 //: [Subscript](Subscript)
-
-
 /*:
  错误处理 ❌
  ==========
@@ -11,9 +9,7 @@
  - 处理错误
  - 指定清理操作
  */
-
 import UIKit
-
 //: 表示并抛出错误
 enum DatingMachineError: Error {
     case invalidSelection                       //选择无效

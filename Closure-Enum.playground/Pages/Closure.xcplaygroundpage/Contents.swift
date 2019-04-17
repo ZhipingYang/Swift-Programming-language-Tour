@@ -37,10 +37,6 @@ let str1 = {
     return str+"1"
 }()
 
-let str21 = { _ in
-    return str+"21"
-}()
-
 let str22 = { obj in
     return str+obj
 }("22")
